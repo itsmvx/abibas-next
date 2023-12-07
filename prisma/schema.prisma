@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum roles {
+  ADMIN
+  USER
+}
+
+enum audiences {
+  ALL
+  MEN
+  WOMEN
+  KID
+}
+
+model audience_images {
+  id         String         @id @unique
+  image_urls String[]
+  created_at DateTime?      @default(now())
+  updated_at DateTime?      @default(now())
+  audience   audiences
+}
+
+model users {
+  id              String         @id @unique @default(cuid())
+  fullname        String?
+  username        String         @unique
+  password        String
+  role            roles?          @default(USER)
+  created_at      DateTime?      @default(now())
+  updated_at      DateTime?      @default(now())
+}
+
+model categories {
+  id              String      @id @unique @default(cuid())
+  audience        audiences   @default(ALL)
+  name            String
+  slug            String?
+  description     String
+  image_urls      String[]
+  created_at      DateTime?   @default(now())
+  updated_at      DateTime?   @default(now())
+  products        products[]
+}
+
+model tags {
+  id              String      @id @unique @default(cuid())
+  audience        audiences   @default(ALL)
+  name            String      @unique
+  slug            String?
+  images          series[]
+  created_at      DateTime?   @default(now())
+  updated_at      DateTime?   @default(now())
+  products        products[] // Changed to many-to-many relationship
+}
+
+model events {
+  id              String      @id @unique @default(cuid())
+  name            String      @unique
+  slug            String
+  description     String
+  image_urls      String[]
+  products        products[]
+  begin_date      DateTime
+  end_date        DateTime
+  created_at      DateTime?  @default(now())
+  updated_at      DateTime?  @default(now())
+}
+
+model series {
+  id              String     @id @unique @default(cuid())
+  name            String     @unique
+  slug            String
+  description     String
+  created_at      DateTime?  @default(now())
+  updated_at      DateTime?  @default(now())
+  tags            tags?       @relation(fields: [tags_id], references: [id])
+  tags_id         String?
+  products        products[]
+}
+
+model products {
+  id            String      @id @unique @default(cuid())
+  name          String      @unique
+  slug          String
+  description   String
+  specs         Json
+  image_urls    String[]
+  audience      audiences?  @default(ALL)
+  category_id   categories?   @relation(fields: [categories_id], references: [id])
+  series        series?     @relation(fields: [series_id], references: [id])
+  tags          tags[]
+  created_at    DateTime?   @default(now())
+  updated_at    DateTime?   @default(now())
+  events        events[]
+  categories_id String?
+  series_id     String?
+}
