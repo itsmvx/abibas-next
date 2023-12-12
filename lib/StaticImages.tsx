@@ -16,7 +16,6 @@ import HaloFest2L from "@/public/assets/6df6a8e49e15bd7dc8a343a567ca59f3.webp";
 import AbibasLogo from "@/public/assets/abibas-logo.webp";
 import LoadingSpinner from "@/public/assets/loading-spinner.svg";
 import Chicken from "@/public/assets/chicken.png";
-import LoadingGif from "@/public/assets/file-transfer.gif"
 import { StaticImageData } from "next/image";
 export const ImagesAll: StaticImageData[] = [
     Haruna1L,
@@ -55,7 +54,6 @@ export {
     HaloFest2L,
     LoadingSpinner,
     Chicken,
-    LoadingGif,
 };
 export const ImagesHaruna: StaticImageData[] = [
     Haruna1L,
