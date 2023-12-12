@@ -4,101 +4,101 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-enum roles {
-  ADMIN
-  USER
-}
-
-enum audiences {
-  ALL
-  MEN
-  WOMEN
-  KID
-}
-
-model audience_images {
-  id         String         @id @unique
-  image_urls String[]
-  created_at DateTime?      @default(now())
-  updated_at DateTime?      @default(now())
-  audience   audiences
+model roles {
+  id         String    @id
+  name       String    @unique
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  users      users[]
 }
 
 model users {
-  id              String         @id @unique @default(cuid())
-  fullname        String?
-  username        String         @unique
-  password        String
-  role            roles?          @default(USER)
-  created_at      DateTime?      @default(now())
-  updated_at      DateTime?      @default(now())
+  id         String    @id @default(cuid())
+  fullname   String?
+  username   String    @unique
+  password   String
+  roles      roles?    @relation(fields: [role_id], references: [id])
+  role_id    String    @default("USER")
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+}
+
+model audiences {
+  id         String       @id
+  name       String
+  images     String[]
+  created_at DateTime?    @default(now())
+  updated_at DateTime?    @default(now())
+  categories categories[]
+  products   products[]
 }
 
 model categories {
-  id              String      @id @unique @default(cuid())
-  audience        audiences   @default(ALL)
-  name            String
-  slug            String?
-  description     String
-  image_urls      String[]
-  created_at      DateTime?   @default(now())
-  updated_at      DateTime?   @default(now())
-  products        products[]
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String
+  description String
+  images      String[]
+  audiences   audiences? @relation(fields: [audience_id], references: [id])
+  audience_id String     @default("UNISEX")
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime?  @default(now())
+  products    products[]
 }
 
 model tags {
-  id              String      @id @unique @default(cuid())
-  audience        audiences   @default(ALL)
-  name            String      @unique
-  slug            String?
-  images          series[]
-  created_at      DateTime?   @default(now())
-  updated_at      DateTime?   @default(now())
-  products        products[] // Changed to many-to-many relationship
-}
-
-model events {
-  id              String      @id @unique @default(cuid())
-  name            String      @unique
-  slug            String
-  description     String
-  image_urls      String[]
-  products        products[]
-  begin_date      DateTime
-  end_date        DateTime
-  created_at      DateTime?  @default(now())
-  updated_at      DateTime?  @default(now())
+  id         String     @id @default(cuid())
+  name       String     @unique
+  slug       String?
+  images     String[]
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @default(now())
+  products   products[]
 }
 
 model series {
-  id              String     @id @unique @default(cuid())
-  name            String     @unique
-  slug            String
-  description     String
-  created_at      DateTime?  @default(now())
-  updated_at      DateTime?  @default(now())
-  tags            tags?       @relation(fields: [tags_id], references: [id])
-  tags_id         String?
-  products        products[]
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String
+  description String
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime?  @default(now())
+  products    products[]
 }
 
 model products {
-  id            String      @id @unique @default(cuid())
-  name          String      @unique
-  slug          String
-  description   String
-  specs         Json
-  image_urls    String[]
-  audience      audiences?  @default(ALL)
-  category_id   categories?   @relation(fields: [categories_id], references: [id])
-  series        series?     @relation(fields: [series_id], references: [id])
-  tags          tags[]
-  created_at    DateTime?   @default(now())
-  updated_at    DateTime?   @default(now())
-  events        events[]
-  categories_id String?
-  series_id     String?
+  id          String      @id @default(cuid())
+  audiences   audiences?  @relation(fields: [audience_id], references: [id])
+  audience_id String?     @default("UNISEX")
+  name        String      @unique
+  slug        String
+  description String
+  specs       String
+  image_urls  String[]
+  categories  categories? @relation(fields: [category_id], references: [id])
+  category_id String?     @default("ALL")
+  series      series?     @relation(fields: [series_id], references: [id])
+  series_id   String?     @default("ORIGINAL")
+  tags        tags[]
+  events      events[]
+  created_at  DateTime?   @default(now())
+  updated_at  DateTime?   @default(now())
+}
+
+model events {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String
+  description String
+  images      String[]
+  status      Boolean    @default(false)
+  begin_date  DateTime
+  end_date    DateTime
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime?  @default(now())
+  products    products[]
 }

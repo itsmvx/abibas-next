@@ -5,12 +5,15 @@ let prisma: PrismaClient;
 if (process.env.NODE_ENV === 'production') {
     prisma = new PrismaClient();
 } else {
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     if (!global.prisma) {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         global.prisma = new PrismaClient();
     }
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     prisma = global.prisma;
 }
 
