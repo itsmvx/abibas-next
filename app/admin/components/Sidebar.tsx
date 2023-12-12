@@ -150,7 +150,7 @@ export const Sidebar = () => {
                             <iconify-icon width={30} icon="mdi:account-circle"></iconify-icon>
                         </div>
                         <p className="flex-1 overflow-ellipsis truncate">
-                            Mas Sando
+                            ....
                         </p>
                         <div className="peer order-last w-10 flex items-center justify-center">
                             <button

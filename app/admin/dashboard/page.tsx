@@ -219,7 +219,7 @@ const DashboardPage = async () => {
                             />
                             <div className="absolute z-20 top-0 bottom-0 left-0 w-full flex flex-col items-center justify-evenly  bg-neutral-900/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                                 <h1 className="justify-self-center mx-8 font-semibold text-zinc-100 text-lg text-center truncate capitalize">
-                                    {` Ushio Noa Sayang `}
+                                    {` Pict 2 `}
                                 </h1>
                                 <div className="text-center text-white">
                                     <Link
@@ -255,7 +255,7 @@ const DashboardPage = async () => {
                             />
                             <div className="absolute z-20 top-0 bottom-0 left-0 w-full flex flex-col items-center justify-evenly  bg-neutral-900/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                                 <h1 className="justify-self-center mx-8 font-semibold text-zinc-100 text-lg text-center truncate capitalize">
-                                    {` Kaa Rio `}
+                                    {` Pict 3 `}
                                 </h1>
                                 <div className="text-center text-white">
                                     <Link
