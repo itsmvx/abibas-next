@@ -1,0 +1,3 @@
+.whatsHotDesc {
+    @apply transition-opacity duration-500 absolute top-0 bottom-0 w-full bg-zinc-100/90 flex flex-col
+}
