@@ -3,4 +3,4 @@ const SeriesPage = () => {
         <div>SeriesPage</div>
     )
 }
-export default SeriesPage
+export default SeriesPage;

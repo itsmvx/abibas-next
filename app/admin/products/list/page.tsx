@@ -3,4 +3,4 @@ const ListProductPage = () => {
         <div>ListProductPage</div>
     )
 }
-export default ListProductPage
+export default ListProductPage;

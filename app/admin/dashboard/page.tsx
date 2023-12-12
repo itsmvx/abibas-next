@@ -3,15 +3,77 @@ import { Noa2L, Rio1L, Rio2L } from "@/lib/StaticImages";
 import Link from "next/link";
 import ADMIN_NAVIGATION from "@/lib/AdminNavigationList";
 import AdminContentWrapper from "@/app/admin/components/AdminContentWrapper";
+import prisma from "@/lib/prisma";
+import { ErrorBoundary } from "@/app/admin/components/ErrorBoundary";
+import { dateFormat } from "@/lib/DateLib";
 
-const DashboardPage = () => {
+const getDashboardData = async () => {
+    try {
+        const [categories, products, series, events] = await Promise.all([
+            prisma.categories.aggregate({
+                _count: true,
+                _max: {
+                    created_at: true
+                }
+            }),
+            prisma.products.aggregate({
+                _count: true,
+                _max: {
+                    created_at: true
+                }
+            }),
+            prisma.series.aggregate({
+                _count: true,
+                _max: {
+                    created_at: true
+                }
+            }),
+            prisma.events.aggregate({
+                _count: true,
+                _max: {
+                    created_at: true
+                }
+            })
+        ])
+
+        return {
+            categories: {
+                count: categories._count,
+                createdAt: categories._max.created_at
+            },
+            products: {
+                count: products._count,
+                createdAt: products._max.created_at
+            },
+            series: {
+                count: series._count,
+                createdAt: series._max.created_at
+            },
+            events: {
+                count: events._count,
+                createdAt: events._max.created_at
+            },
+        }
+    } catch (error) {
+        return null;
+    }
+}
+const DashboardPage = async () => {
+    const dashboardData = await getDashboardData();
+
+    if (!dashboardData) {
+        return (
+            <>
+                <ErrorBoundary />
+            </>
+        )
+    }
     const sampleH1 = "Abibas Night StarFall MK.I";
     const sampleH2 = "Abibas Netherlight ultimate";
     const sampleH3 = "Abibas Constant Async";
     const getSegmentRouteName = (name: string): string => {
         return name.toLowerCase().replace(/[\s.]+/g, '-');
     }
-
     return (
         <>
             <AdminContentWrapper>
@@ -26,12 +88,16 @@ const DashboardPage = () => {
                                     Total Categories
                                 </h1>
                                 <p className="text-xl text-right font-bold truncate">
-                                    69 Categories
+                                    { `${dashboardData.categories.count} Categories` }
                                 </p>
                             </div>
                         </div>
                         <div className="h-10 flex items-end justify-center text-sm text-zinc-700">
-                            Last entry: 2022-10-09
+                            Last Entry :
+                            { dashboardData.categories.createdAt
+                                ? ` ${dateFormat(dashboardData.categories.createdAt.toDateString(), 'YYYY-MM-DD')}`
+                                : 'Not set yet'
+                            }
                         </div>
                     </div>
 
@@ -45,12 +111,16 @@ const DashboardPage = () => {
                                     Total Series
                                 </h1>
                                 <p className="text-xl text-right font-bold truncate">
-                                    2401 Series
+                                    { `${dashboardData.series.count} Series` }
                                 </p>
                             </div>
                         </div>
                         <div className="h-10 flex items-end justify-center text-sm text-zinc-700">
-                            Last entry: 2022-11-24
+                            Last entry :
+                            { dashboardData.series.createdAt
+                                ? ` ${dateFormat(dashboardData.series.createdAt.toDateString())} `
+                                : ' Not set yet'
+                            }
                         </div>
                     </div>
                     <div className="w-full h-36 bg-white rounded-lg ring-[0.5px] ring-zinc-400 shadow-sm shadow-gray-300">
@@ -63,12 +133,17 @@ const DashboardPage = () => {
                                     Total Products
                                 </h1>
                                 <p className="text-xl text-right font-bold truncate">
-                                    7472 Products
+                                    { `${dashboardData.products.count} Products`}
                                 </p>
                             </div>
                         </div>
                         <div className="h-10 flex items-end justify-center text-sm text-zinc-700">
-                            Last entry: 2023-10-22
+                            Last entry :
+                            { dashboardData.products.createdAt
+                                ? ` ${dateFormat(dashboardData.products.createdAt.toDateString(), 'YYYY-MM-DD')} `
+                                : ' Not set yet'
+
+                            }
                         </div>
                     </div>
                     <div className="w-full h-36 bg-white rounded-lg ring-[0.5px] ring-zinc-400 shadow-sm shadow-gray-300">
@@ -81,7 +156,7 @@ const DashboardPage = () => {
                                     Total Events
                                 </h1>
                                 <p className="text-xl text-right font-bold truncate">
-                                    14 Events
+                                    { `${dashboardData.events.count} Events` }
                                 </p>
                             </div>
                         </div>
