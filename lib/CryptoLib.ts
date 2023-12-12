@@ -24,10 +24,10 @@ const aesDecrypt = (value: string, iv: Uint8Array): string | null => {
         return null;
     }
 };
-const aesCryptoTest = (value: string, iv: Uint8Array): boolean => {
+const aesCryptoTest = (key: string, iv: Uint8Array): boolean => {
     try {
         const decipher: crypto.Decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(getAesKey(), 'hex'), iv);
-        decipher.update(value, 'hex', 'utf-8');
+        decipher.update(key, 'hex', 'utf-8');
 
         return true;
     } catch (error) {
