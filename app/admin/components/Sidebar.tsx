@@ -71,6 +71,18 @@ export const Sidebar = () => {
                             <p >Dashboard</p>
                         </Link>
                         <Link
+                            href={`/admin/${ADMIN_NAVIGATION.AUDIENCES}`}
+                            className={ secondRouteSegment === ADMIN_NAVIGATION.AUDIENCES
+                                ? styles.buttonActive
+                                : styles.buttonInactive
+                            }
+                        >
+                            <div className="mt-1 ml-2 basis-1/5 ">
+                                <iconify-icon width={24} icon="mdi:folder-multiple-outline"></iconify-icon>
+                            </div>
+                            <p >Audiences</p>
+                        </Link>
+                        <Link
                             href={`/admin/${ ADMIN_NAVIGATION.CATEGORIES }`}
                             className={ secondRouteSegment === ADMIN_NAVIGATION.CATEGORIES
                                 ? styles.buttonActive
@@ -145,7 +157,8 @@ export const Sidebar = () => {
                                 className="w-full"
                                 onClick={() => {
                                     signOut({
-                                        redirect: true
+                                        redirect: true,
+                                        callbackUrl: `${window.origin}/sign-in`
                                     })
                                 }}>
                                 <iconify-icon width={26} icon="mdi:logout-variant"></iconify-icon>
