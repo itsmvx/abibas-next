@@ -109,11 +109,8 @@ const SignInForm = () => {
             username: event.target[0].value,
             password: event.target[1].value,
             redirect: false,
-            json: false
         });
-        console.log(authResult)
         if (authResult?.status === 401){
-            console.log('ere')
             signInDispatch({ type: SIGN_IN_ACTIONS.ONUNAUTHORIZED as keyof SignInActionType });
         }
         else {
@@ -121,7 +118,6 @@ const SignInForm = () => {
             router.push('/admin/dashboard')
             signInDispatch({ type: SIGN_IN_ACTIONS.ONSUBMIT_FALSE as keyof SignInActionType });
         }
-
     };
 
     return (
